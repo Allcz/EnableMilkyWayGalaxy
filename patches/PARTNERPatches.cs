@@ -46,9 +46,7 @@ namespace EnableMilkyWayGalaxy.patches
 
                 ulong num9 = generatingCapacity - PARTNER.lastUpGenCaps;
                 if (generatingCapacity <= 0UL || (_lastUploadSeedKey == gameData.GetSeedKey() && (num9 < 0UL || num9 < num8)))
-                {
                     return reqSaveUserData;
-                }
 
                 PARTNER.lastUpGenCaps = generatingCapacity;
                 _lastUploadSeedKey = gameData.GetSeedKey();
@@ -115,18 +113,18 @@ namespace EnableMilkyWayGalaxy.patches
 
         public static void UploadClusterGenerationToGalaxyServer(GameData gameData)
         {
-            // 
             if (GameConfig.gameVersion.ToString() != "0.8.22")
                 return;
-
             try
             {
                 float realtimeSinceStartup = Time.realtimeSinceStartup;
                 if ((double) realtimeSinceStartup < (double) PARTNER.upLoadCoolDown || !DSPGame.milkyWayActivated)
                     return;
+
                 var reqSaveUserData = GetReqSaveUserData(gameData);
                 if (string.IsNullOrEmpty(reqSaveUserData.signCode))
                     return;
+
                 string json = JsonUtility.ToJson((object) reqSaveUserData);
                 HttpConnectParam requestInfo = new HttpConnectParam();
                 requestInfo.url = PARTNER.saveDysonSphereDataUrl;

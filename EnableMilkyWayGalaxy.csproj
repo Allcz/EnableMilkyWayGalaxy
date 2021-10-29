@@ -56,8 +56,8 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="EnableMilkyWayGalaxy.cs" />
-        <Compile Include="patch\PARTNERPatches.cs" />
-        <Compile Include="patch\Patches.cs" />
+        <Compile Include="patches\PARTNERPatches.cs" />
+        <Compile Include="patches\Patches.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
     <ItemGroup>

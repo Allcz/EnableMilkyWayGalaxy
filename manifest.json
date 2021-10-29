@@ -1,0 +1,9 @@
+{
+  "name": "EnableMilkyWayGalaxy",
+  "version_number": "1.0.1",
+  "website_url": "https://github.com/Allcz/EnableMilkyWayGalaxy",
+  "description": "Enables uploading cluster generation to galaxy server even if mods are used.",
+  "dependencies": [
+    "xiaoye97-BepInEx-5.4.11"
+  ]
+}

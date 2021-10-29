@@ -1,6 +1,6 @@
 ﻿using HarmonyLib;
 
-namespace EnableMilkyWayGalaxy.patch
+namespace EnableMilkyWayGalaxy.patches
 {
     [HarmonyPatch]
     public class Patches

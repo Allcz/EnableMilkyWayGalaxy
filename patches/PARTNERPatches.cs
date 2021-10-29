@@ -2,7 +2,7 @@
 using DSPWeb;
 using Random = System.Random;
 
-namespace EnableMilkyWayGalaxy.patch
+namespace EnableMilkyWayGalaxy.patches
 {
     public class PartnerPatches : MonoBehaviour
     {

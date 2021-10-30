@@ -28,5 +28,17 @@ namespace EnableMilkyWayGalaxy.patches
             __result = true;
             return false;
         }
+        
+        /*
+         * 当前用户与存档用户不一致时，结果强制返回一致
+         * UIAchievementPanel._OnOpen()中使用该判断，以显示成就开启新存档提示
+         */
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof (AchievementSystem), "isSelfFormalGame", MethodType.Getter)]
+        public static bool AchievementSystem_isSelfFormalGame_Prefix(ref bool __result)
+        {
+            __result = true;
+            return false;
+        }
     }
 }

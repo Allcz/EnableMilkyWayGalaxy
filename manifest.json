@@ -1,6 +1,6 @@
 {
   "name": "EnableMilkyWayGalaxy",
-  "version_number": "1.0.1",
+  "version_number": "1.0.3",
   "website_url": "https://github.com/Allcz/EnableMilkyWayGalaxy",
   "description": "Enables unlocking achievements and uploading cluster generation to galaxy server even if you use mods or not your game save.  即使使用mod、其他人的存档 也可以 解锁成就、上传戴森球发电数据到银河系服务器。",
   "dependencies": [

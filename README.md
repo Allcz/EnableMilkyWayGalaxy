@@ -13,6 +13,9 @@
 
 ## Changelog
 
+### v1.0.5
+- Fixed one mistake what I made in the last version.
+
 ### v1.0.4
 - Refactor the code.
 

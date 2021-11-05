@@ -1,4 +1,5 @@
-﻿using BepInEx;
+﻿using System;
+using BepInEx;
 using HarmonyLib;
 
 namespace EnableMilkyWayGalaxy
@@ -9,13 +10,11 @@ namespace EnableMilkyWayGalaxy
     {
         private const string ModGuid = "Allz.EnableMilkyWayGalaxy";
         private const string ModName = "EnableMilkyWayGalaxy";
-        private const string ModVersion = "1.0.4";
+        private const string ModVersion = "1.0.5";
         private const string GameProcess = "DSPGAME.exe";
         private readonly Harmony _harmony = new Harmony(ModGuid);
 
-        private void Awake()
-        {
-            _harmony.PatchAll();
-        }
+        [Obsolete]
+        public void Start() => this._harmony.PatchAll();
     }
 }

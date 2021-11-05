@@ -1,15 +1,21 @@
 # EnableMilkyWayGalaxy
 
 ## Features
-- Enables unlocking achievements and uploading cluster generation to galaxy server even if you use mods or not your game save.
+- Whatever mods you are using or it is not your game save:
+  - You can still upload the data, power generation by Dyson spheres, to milky way galaxy server successfully.
+  - Enables unlocking achievements.
 
-- Limited this version(0.8.22) available
 
-- 即使使用 mod / 其他人的存档 也允许 解锁成就、上传戴森球发电数据到银河系服务器。
+- 即使使用mod或者其他人的存档：
+  - 你的戴森球发电数据仍然可以成功地在 银河系 上显示。
+  - 允许解锁成就。
 
-- 限游戏版本 （0.8.22） 可用
 
 ## Changelog
+
+### v1.0.4
+- Refactor the code.
+
 ### v1.0.3
 - Enables unlocking achievements even if it is not your game save.
 

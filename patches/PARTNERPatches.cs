@@ -113,8 +113,6 @@ namespace EnableMilkyWayGalaxy.patches
 
         public static void UploadClusterGenerationToGalaxyServer(GameData gameData)
         {
-            if (GameConfig.gameVersion.ToString() != "0.8.22")
-                return;
             try
             {
                 float realtimeSinceStartup = Time.realtimeSinceStartup;

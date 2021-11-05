@@ -32,31 +32,7 @@
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
     <ItemGroup>
-        <Reference Include="0Harmony, Version=2.4.2.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\..\..\Documents\dotpeek\Auxilaryfunction\libs\0Harmony.dll</HintPath>
-        </Reference>
-        <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\..\..\Documents\dotpeek\Managed\Assembly-CSharp.dll</HintPath>
-        </Reference>
-        <Reference Include="BepInEx, Version=5.4.11.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\..\..\Documents\dotpeek\Auxilaryfunction\libs\BepInEx.dll</HintPath>
-        </Reference>
-        <Reference Include="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <HintPath>..\..\..\Documents\dotpeek\Auxilaryfunction\libs\mscorlib.dll</HintPath>
-        </Reference>
-        <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\..\..\Documents\dotpeek\Auxilaryfunction\libs\UnityEngine.dll</HintPath>
-        </Reference>
-        <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\..\..\Documents\dotpeek\Auxilaryfunction\libs\UnityEngine.CoreModule.dll</HintPath>
-        </Reference>
-        <Reference Include="UnityEngine.JSONSerializeModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\..\..\Documents\dotpeek\Auxilaryfunction\libs\Managed\UnityEngine.JSONSerializeModule.dll</HintPath>
-        </Reference>
-    </ItemGroup>
-    <ItemGroup>
-        <Compile Include="EnableMilkyWayGalaxy.cs" />
-        <Compile Include="Log.cs" />
+        <Compile Include="MainClass.cs" />
         <Compile Include="patches\PARTNERPatches.cs" />
         <Compile Include="patches\Patches.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
@@ -72,6 +48,44 @@
       <Content Include="manifest.json" />
       <Content Include="README.md" />
       <Content Include="icon.png" />
+    </ItemGroup>
+    <ItemGroup>
+      <Reference Include="0Harmony, Version=2.4.2.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\MilkyWayGalaxyEditor\MilkyWayGalaxyEditor\bin\Debug\0Harmony.dll</HintPath>
+      </Reference>
+      <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\MilkyWayGalaxyEditor\MilkyWayGalaxyEditor\bin\Debug\Assembly-CSharp.dll</HintPath>
+      </Reference>
+      <Reference Include="BepInEx, Version=5.4.11.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\MilkyWayGalaxyEditor\MilkyWayGalaxyEditor\bin\Debug\BepInEx.dll</HintPath>
+      </Reference>
+      <Reference Include="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+        <HintPath>..\..\MilkyWayGalaxyEditor\MilkyWayGalaxyEditor\bin\Debug\mscorlib.dll</HintPath>
+      </Reference>
+      <Reference Include="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
+        <HintPath>..\..\..\Documents\dotpeek\Managed\System.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\MilkyWayGalaxyEditor\MilkyWayGalaxyEditor\bin\Debug\UnityEngine.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\MilkyWayGalaxyEditor\MilkyWayGalaxyEditor\bin\Debug\UnityEngine.CoreModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.IMGUIModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\MilkyWayGalaxyEditor\MilkyWayGalaxyEditor\bin\Debug\UnityEngine.IMGUIModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.JSONSerializeModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\MilkyWayGalaxyEditor\MilkyWayGalaxyEditor\bin\Debug\UnityEngine.JSONSerializeModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.SharedInternalsModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\MilkyWayGalaxyEditor\MilkyWayGalaxyEditor\bin\Debug\UnityEngine.SharedInternalsModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.TextRenderingModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\..\Documents\dotpeek\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\MilkyWayGalaxyEditor\MilkyWayGalaxyEditor\bin\Debug\UnityEngine.UI.dll</HintPath>
+      </Reference>
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

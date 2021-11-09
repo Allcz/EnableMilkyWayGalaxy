@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using DSPWeb;
 using Random = System.Random;
 
@@ -102,12 +103,15 @@ namespace EnableMilkyWayGalaxy.patches
             Random random = new Random();
             long sailLaunchToDysonSphereMinimum =
                 (long) (reqSaveUserData.totalCellOnLayer + reqSaveUserData.totalSailOnSwarm);
-            while (sailLaunchToDysonSphereMinimum > reqSaveUserData.totalSailLaunchToDysonSphere)
-                reqSaveUserData.totalSailLaunchToDysonSphere += reqSaveUserData.totalSailLaunchToDysonSphere + random.Next(0xfff);
+            while (sailLaunchToDysonSphereMinimum >= reqSaveUserData.totalSailLaunchToDysonSphere)
+                reqSaveUserData.totalSailLaunchToDysonSphere += reqSaveUserData.totalSailLaunchToDysonSphere + random.Next(0xffff);
+
+            reqSaveUserData.totalSailOnSwarm = Math.Max(reqSaveUserData.totalSailOnSwarm
+                , Math.Min((long) (random.NextDouble() * (reqSaveUserData.totalSailLaunchToDysonSphere - reqSaveUserData.totalCellOnLayer)), (long) (0.05 * random.NextDouble() * reqSaveUserData.totalSailLaunchToDysonSphere)));
 
             long sailUsedMinimum = reqSaveUserData.totalSailLaunchToDysonSphere + reqSaveUserData.totalStructureOnLayer * 6;
-            while (sailUsedMinimum > reqSaveUserData.totalItemSailProduct)
-                reqSaveUserData.totalItemSailProduct += reqSaveUserData.totalItemSailProduct + random.Next(0xfff);
+            while (sailUsedMinimum >= reqSaveUserData.totalItemSailProduct)
+                reqSaveUserData.totalItemSailProduct += reqSaveUserData.totalItemSailProduct + random.Next(0xffff);
         }
 
 
@@ -124,6 +128,7 @@ namespace EnableMilkyWayGalaxy.patches
                     return;
 
                 string json = JsonUtility.ToJson((object) reqSaveUserData);
+
                 HttpConnectParam requestInfo = new HttpConnectParam();
                 requestInfo.url = PARTNER.saveDysonSphereDataUrl;
                 requestInfo.SetTextData(json);

@@ -13,6 +13,9 @@
 
 ## Changelog
 
+### v1.0.6
+- Fixed the milky way server rejecting the data when the total of sails which launch to Dyson sphere is zero.
+
 ### v1.0.5
 - Fixed one mistake what I made in the last version.
 

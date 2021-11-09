@@ -32,7 +32,7 @@
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
     <ItemGroup>
-        <Compile Include="MainClass.cs" />
+        <Compile Include="EnableMilkyWayGalaxy.cs" />
         <Compile Include="patches\PARTNERPatches.cs" />
         <Compile Include="patches\Patches.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />

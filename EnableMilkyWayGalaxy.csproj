@@ -54,7 +54,7 @@
         <HintPath>..\..\MilkyWayGalaxyEditor\MilkyWayGalaxyEditor\bin\Debug\0Harmony.dll</HintPath>
       </Reference>
       <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>..\..\MilkyWayGalaxyEditor\MilkyWayGalaxyEditor\bin\Debug\Assembly-CSharp.dll</HintPath>
+        <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Dyson Sphere Program\DSPGAME_Data\Managed\Assembly-CSharp.dll</HintPath>
       </Reference>
       <Reference Include="BepInEx, Version=5.4.11.0, Culture=neutral, PublicKeyToken=null">
         <HintPath>..\..\MilkyWayGalaxyEditor\MilkyWayGalaxyEditor\bin\Debug\BepInEx.dll</HintPath>

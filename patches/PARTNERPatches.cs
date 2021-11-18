@@ -135,7 +135,7 @@ namespace EnableMilkyWayGalaxy.patches
                 PARTNER.upLoadCoolDown = realtimeSinceStartup + 10f;
                 DSPGame.httpManager.PostByJson(requestInfo);
                 MilkyWayLogic.ResetInitState();
-                GameMain.achievementLogic.uploadMilkyWayDataDeterminator.ManualUnlock();
+                GameMain.gameScenario.NotifyOnUploadMilkyWay();
             }
             catch
             {

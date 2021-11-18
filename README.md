@@ -1,7 +1,8 @@
 # EnableMilkyWayGalaxy
 
 ## Features
-- Whatever mods you are using or it is not your game save:
+
+- Even if you are using mods or it is not your game save:
   - You can still upload the data, power generation by Dyson spheres, to milky way galaxy server successfully.
   - Enables unlocking achievements.
 
@@ -12,6 +13,9 @@
 
 
 ## Changelog
+
+### v1.0.7
+-- Updated to work with game version 0.8.23.9808 or higher
 
 ### v1.0.6
 - Fixed the milky way server rejecting the data when the total of sails which launch to Dyson sphere is zero.

@@ -14,8 +14,15 @@
 
 ## Changelog
 
+
+### v1.0.9
+- Reduce errors caused by game updates.
+
+### v1.0.8
+- Updated to work with game version 0.8.23.9989 or higher.
+
 ### v1.0.7
-- Updated to work with game version 0.8.23.9808 or higher
+- Updated to work with game version 0.8.23.9808 or higher.
 
 ### v1.0.6
 - Fixed the milky way server rejecting the data when the total of sails which launch to Dyson sphere is zero.
@@ -34,7 +41,7 @@
 - Refactor the code
 
 ### v1.0.1
-- Updated to work with game version 0.8.22.9331 or higher
+- Updated to work with game version 0.8.22.9331 or higher.
 
 ### v1.0.0
-- Initial release
+- Initial release.

@@ -88,7 +88,7 @@ namespace EnableMilkyWayGalaxy.patches
 
                 ReqSailDataCheck(reqSaveUserData);
 
-                reqSaveUserData.signCode = WebUtility.Sign((object) reqSaveUserData);
+                reqSaveUserData.signCode = NetUtility.Sign((object) reqSaveUserData);
             }
             catch
             {
@@ -134,7 +134,7 @@ namespace EnableMilkyWayGalaxy.patches
                 requestInfo.SetTextData(json);
                 PARTNER.upLoadCoolDown = realtimeSinceStartup + 10f;
                 DSPGame.httpManager.PostByJson(requestInfo);
-                MilkyWayLogic.ResetInitState();
+                MilkyWayLogic_Obselete.ResetInitState();
                 GameMain.gameScenario.NotifyOnUploadMilkyWay();
             }
             catch

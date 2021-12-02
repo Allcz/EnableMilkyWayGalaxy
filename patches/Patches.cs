@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using System;
+using HarmonyLib;
 
 namespace EnableMilkyWayGalaxy.patches
 {
@@ -12,7 +13,16 @@ namespace EnableMilkyWayGalaxy.patches
         [HarmonyPatch(typeof(GameSave), "SaveCurrentGame")]
         public static bool GameSave_SaveCurrentGame_Prefix()
         {
-            PartnerPatches.UploadClusterGenerationToGalaxyServer(GameMain.data);
+            try
+            {
+                PartnerPatches.UploadClusterGenerationToGalaxyServer(GameMain.data);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return true;
+            }
+
             return true;
         }
 

@@ -16,7 +16,7 @@
 
 
 ### v1.0.9
-- Reduce errors caused by game updates.
+- Refactor the code.
 
 ### v1.0.8
 - Updated to work with game version 0.8.23.9989 or higher.

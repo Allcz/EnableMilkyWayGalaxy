@@ -10,21 +10,23 @@ namespace EnableMilkyWayGalaxy.patches
          * 该补丁会处理戴森球发电数据使其合理化并上传至银河系服务器
          */
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(GameSave), "SaveCurrentGame")]
+        [HarmonyPatch(typeof(MilkyWayWebClient), "SendUploadLoginRequest")]
         public static bool GameSave_SaveCurrentGame_Prefix()
         {
             try
             {
-                PartnerPatches.UploadClusterGenerationToGalaxyServer(GameMain.data);
+                MilkyWayPatches.SendUploadLoginRequest();
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Log.SaveToFile(e.ToString());
                 return true;
             }
+
             return true;
         }
-
+        
+        
         [HarmonyPrefix]
         // 判断游戏数据是否正常,返回true（正常）
         [HarmonyPatch(typeof(GameAbnormalityData), "IsGameNormal")]

@@ -33,8 +33,11 @@
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="EnableMilkyWayGalaxy.cs" />
-        <Compile Include="patches\PARTNERPatches.cs" />
+        <Compile Include="patches\Log.cs" />
+        <Compile Include="patches\MilkyWayPatches.cs" />
         <Compile Include="patches\Patches.cs" />
+        <Compile Include="patches\ReflectionUtil.cs" />
+        <Compile Include="patches\SaveUserData.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
     <ItemGroup>
@@ -42,9 +45,12 @@
       <Content Include="libs\Assembly-CSharp.dll" />
       <Content Include="libs\BepInEx.dll" />
       <Content Include="libs\mscorlib.dll" />
+      <Content Include="libs\System.dll" />
       <Content Include="libs\UnityEngine.CoreModule.dll" />
       <Content Include="libs\UnityEngine.dll" />
       <Content Include="libs\UnityEngine.JSONSerializeModule.dll" />
+      <Content Include="libs\UnityEngine.Networking.dll" />
+      <Content Include="libs\UnityEngine.UnityWebRequestModule.dll" />
       <Content Include="manifest.json" />
       <Content Include="README.md" />
       <Content Include="icon.png" />
@@ -56,17 +62,14 @@
       <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
         <HintPath>libs\Assembly-CSharp.dll</HintPath>
       </Reference>
-      <Reference Include="BepInEx, Version=5.4.11.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>..\..\MilkyWayGalaxyEditor\MilkyWayGalaxyEditor\bin\Debug\BepInEx.dll</HintPath>
-      </Reference>
       <Reference Include="BepInEx, Version=5.4.17.0, Culture=neutral, PublicKeyToken=null">
         <HintPath>libs\BepInEx.dll</HintPath>
       </Reference>
       <Reference Include="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-        <HintPath>..\..\MilkyWayGalaxyEditor\MilkyWayGalaxyEditor\bin\Debug\mscorlib.dll</HintPath>
+        <HintPath>libs\mscorlib.dll</HintPath>
       </Reference>
       <Reference Include="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
-        <HintPath>..\..\..\Documents\dotpeek\Managed\System.dll</HintPath>
+        <HintPath>libs\System.dll</HintPath>
       </Reference>
       <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
         <HintPath>libs\UnityEngine.dll</HintPath>
@@ -76,6 +79,12 @@
       </Reference>
       <Reference Include="UnityEngine.JSONSerializeModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
         <HintPath>libs\UnityEngine.JSONSerializeModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.Networking, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>libs\UnityEngine.Networking.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityWebRequestModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>libs\UnityEngine.UnityWebRequestModule.dll</HintPath>
       </Reference>
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

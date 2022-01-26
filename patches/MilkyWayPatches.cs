@@ -226,8 +226,10 @@ namespace EnableMilkyWayGalaxy.patches
                 (object) data.totalFrameOnLayer, (object) data.totalSailOnSwarm, (object) data.totalStructureOnLayer,
                 (object) data.totalCellOnLayer, (object) str1, (object) num29, (object) milkyWayWebClient.loginKey,
                 (object) str2);
-            //Log.SaveToFile(url);
-
+            // Log.SaveToFile(url);
+            
+            lastUploadTime = time;
+            
             milkyWayWebClient.uploadRequest = HttpManager.GetByUrl(new HttpConnectParam()
             {
                 url = url,
@@ -298,7 +300,6 @@ namespace EnableMilkyWayGalaxy.patches
         {
             if (GameMain.data == null || time - lastUploadTime <= 119.0)
                 return false;
-            lastUploadTime = time;
             if (AccountData.me.userId <= 0UL || AccountData.me.platform <= ESalePlatform.Standalone)
                 return false;
             milkyWayWebClient.loginRequest = HttpManager.GetByUrl(new HttpConnectParam()

@@ -1,5 +1,6 @@
 ﻿using System;
 using HarmonyLib;
+using UnityEngine;
 
 namespace EnableMilkyWayGalaxy.patches
 {
@@ -19,7 +20,8 @@ namespace EnableMilkyWayGalaxy.patches
             }
             catch (Exception e)
             {
-                Log.SaveToFile(e.ToString());
+                // Log.SaveToFile(e.ToString());
+                Debug.Log(e);
                 return true;
             }
 

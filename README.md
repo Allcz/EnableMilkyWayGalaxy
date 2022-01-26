@@ -14,6 +14,8 @@
 
 ## Changelog
 
+### v1.1.1
+- Bugs fixed.
 
 ### v1.1.0
 - Updated to work with game version 0.9.24.11209 or higher.

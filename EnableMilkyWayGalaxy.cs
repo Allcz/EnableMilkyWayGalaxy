@@ -10,7 +10,7 @@ namespace EnableMilkyWayGalaxy
     {
         private const string ModGuid = "Allz.EnableMilkyWayGalaxy";
         private const string ModName = "EnableMilkyWayGalaxy";
-        private const string ModVersion = "1.1.0";
+        private const string ModVersion = "1.1.2";
         private const string GameProcess = "DSPGAME.exe";
         private readonly Harmony _harmony = new Harmony(ModGuid);
 

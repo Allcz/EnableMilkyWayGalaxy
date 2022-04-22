@@ -1,4 +1,5 @@
 ﻿using System;
+using ABN;
 using HarmonyLib;
 using UnityEngine;
 
@@ -31,7 +32,7 @@ namespace EnableMilkyWayGalaxy.patches
         
         [HarmonyPrefix]
         // 判断游戏数据是否正常,返回true（正常）
-        [HarmonyPatch(typeof(GameAbnormalityData), "IsGameNormal")]
+        [HarmonyPatch(typeof(GameAbnormalityData_0925), "NothingAbnormal")]
         // 判断当前用户与存档用户是否一致，返回true（一致）
         [HarmonyPatch(typeof(AchievementLogic), "isSelfFormalGame", MethodType.Getter)]
         // 判断是否可以解锁成就，返回true（可以解锁） 原方法：public bool active => this.gameData.gameDesc.achievementEnable & this.gameData.gameAbnormality.IsGameNormal() && this.isSelfFormalGame;

@@ -197,8 +197,8 @@ namespace EnableMilkyWayGalaxy.patches
             }*/
 
             productTotalDict = new Dictionary<int, long>(tempProductTotalDict);
-            
-            long seedKey = gameData.GetSeedKey();
+
+            long clusterSeedKey = gameData.GetClusterSeedKey();
             long userId = (long) gameData.account.userId;
             byte platform = (byte) gameData.account.platform;
             string userName = gameData.account.userName;
@@ -214,22 +214,22 @@ namespace EnableMilkyWayGalaxy.patches
                 ? (byte) 1
                 : (byte) 0;
             string str2 = MD5F.Compute(string.Format("{0}+{1}+{2}+{3}+{4}+{5}+{6}+{7}+{8}+{9}+{10}+{11}",
-                (object) seedKey, (object) userId, (object) platform, (object) (long) data.generatingCapacity,
+                (object) clusterSeedKey, (object) userId, (object) platform, (object) (long) data.generatingCapacity,
                 (object) data.dysonSphereCount, (object) data.totalNodeOnLayer,
                 (object) data.totalFrameOnLayer, (object) data.totalSailOnSwarm, (object) data.totalStructureOnLayer,
                 (object) data.totalCellOnLayer, (object) str1, (object) milkyWayWebClient.loginKey));
             string url = string.Format(
                 "{0}{1}?seed={2}&user_id={3}&platform={4}&user_name={5}&cluster_generation={6}&dyson_sphere_count={7}&dyson_node_count={8}&dyson_frame_count={9}&total_sail={10}&total_sp={11}&total_cp={12}&evidence={13}&is_anonymous={14}&login_key={15}&signature={16}",
                 (object) MilkyWayWebClient.galaxyServerAddress, (object) MilkyWayWebClient.uploadApi,
-                (object) seedKey, (object) userId, (object) platform, (object) Uri.EscapeDataString(userName),
+                (object) clusterSeedKey, (object) userId, (object) platform, (object) Uri.EscapeDataString(userName),
                 (object) (long) data.generatingCapacity, (object) data.dysonSphereCount, (object) data.totalNodeOnLayer,
                 (object) data.totalFrameOnLayer, (object) data.totalSailOnSwarm, (object) data.totalStructureOnLayer,
                 (object) data.totalCellOnLayer, (object) str1, (object) num29, (object) milkyWayWebClient.loginKey,
                 (object) str2);
             // Log.SaveToFile(url);
-            
+
             lastUploadTime = time;
-            
+
             milkyWayWebClient.uploadRequest = HttpManager.GetByUrl(new HttpConnectParam()
             {
                 url = url,

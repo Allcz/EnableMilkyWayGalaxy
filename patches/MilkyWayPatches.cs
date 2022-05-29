@@ -10,14 +10,22 @@ namespace EnableMilkyWayGalaxy.patches
     public class MilkyWayPatches : MonoBehaviour
     {
         private static MilkyWayWebClient milkyWayWebClient = DSPGame.milkyWayWebClient;
+        
+        private static Random random = new Random();
         private static double time => (DateTime.UtcNow.ToOADate() - 44217.0) * 86400.0;
 
+        /**
+         * 通过反射获取、赋值 MilkyWayWebClient 属性 lastUploadTime
+         */
         private static double lastUploadTime
         {
             get { return ReflectionUtil.GetPrivateField<double>(milkyWayWebClient, "lastUploadTime"); }
             set { ReflectionUtil.SetPrivateField(milkyWayWebClient, "lastUploadTime", value); }
         }
 
+        /**
+         * 发送戴森球数据到银河系服务器
+         */
         public static void SendUploadRecordRequest(GameData gameData)
         {
             var data = new SaveUserData();
@@ -86,10 +94,8 @@ namespace EnableMilkyWayGalaxy.patches
                 }
             }
 
-
             Dictionary<int, long> tempProductTotalDict = new Dictionary<int, long>(productTotalDict);
 
-            Random random = new Random();
             var randomRate = 1.01 + 0.02 * random.NextDouble();
             if (miningCostRate < Math.Pow(0.94, 5))
             {
@@ -111,7 +117,6 @@ namespace EnableMilkyWayGalaxy.patches
                 }
             }
 
-
             for (int i = 6001; i < 6006; i++)
             {
                 var randomTotal = (long) ((1 + 0.5d * random.NextDouble()) * 0xfffff) + tempProductTotalDict[6006];
@@ -124,7 +129,6 @@ namespace EnableMilkyWayGalaxy.patches
                     }
                 }
             }
-
 
             long min1503 = data.totalStructureOnLayer;
             if (tempProductTotalDict[1503] < min1503)
@@ -168,34 +172,6 @@ namespace EnableMilkyWayGalaxy.patches
                 tempProductTotalDict[1125] = ProductRate(randomRate, min1125);
             }
 
-
-            /*
-             List<RecipeProto> recipeProtos = new List<RecipeProto>((IEnumerable<RecipeProto>) LDB.recipes.dataArray);
-             foreach (var kv in tempProductTotalDict)
-            {
-                if (productTotalDict[kv.Key] < kv.Value)
-                {
-                    int itemId = kv.Key;
-                    long total = kv.Value;
-                    ProductStat[] productPool = factoryStatPool[0].productPool;
-                    int productIndex = factoryStatPool[0].productIndices[itemId];
-                    if (productPool[productIndex] == null)
-                    {
-                        Log.SaveToFile($"productPool[{productIndex}] == null");
-                        productPool[productIndex] = new ProductStat();
-                        productPool[productIndex].Init(itemId);
-                    }
-
-                    var difVal = total - productTotalDict[itemId];
-                    productPool[productIndex].total[6] += difVal;
-                }
-            }
-            if (!OriginalDataCheck(data, productTotalDict))
-            {
-                Log.SaveToFile("OriginalDataCheck() -> Return False, Upload Fake Data To Milky Way Server.");
-                
-            }*/
-
             productTotalDict = new Dictionary<int, long>(tempProductTotalDict);
 
             long clusterSeedKey = gameData.GetClusterSeedKey();
@@ -226,10 +202,6 @@ namespace EnableMilkyWayGalaxy.patches
                 (object) data.totalFrameOnLayer, (object) data.totalSailOnSwarm, (object) data.totalStructureOnLayer,
                 (object) data.totalCellOnLayer, (object) str1, (object) num29, (object) milkyWayWebClient.loginKey,
                 (object) str2);
-            // Log.SaveToFile(url);
-
-            lastUploadTime = time;
-
             milkyWayWebClient.uploadRequest = HttpManager.GetByUrl(new HttpConnectParam()
             {
                 url = url,
@@ -238,8 +210,13 @@ namespace EnableMilkyWayGalaxy.patches
                 errorDelegate = new HttpRequestErrorDelegate(milkyWayWebClient.OnUploadErrored),
                 maxTimeoutTime = 30
             });
+            String content = String.Format("send data to milky way: url={0}", url);
+            Log.LOG(content);
         }
 
+        /**
+         * 存档账户信息与登录账户信息统一
+         */
         public static void Pre(GameData gameData)
         {
             gameData.account.userId = AccountData.me.userId;
@@ -252,6 +229,9 @@ namespace EnableMilkyWayGalaxy.patches
             return (long) (rate * pro);
         }
 
+        /**
+         * 登录成功后执行该方法
+         */
         public static void OnUploadLoginSucceed(DownloadHandler handler)
         {
             if (!((UnityEngine.Object) milkyWayWebClient.loginRequest != (UnityEngine.Object) null))
@@ -270,36 +250,14 @@ namespace EnableMilkyWayGalaxy.patches
             SendUploadRecordRequest(GameMain.data);
         }
 
-        public static bool OriginalDataCheck(SaveUserData data, Dictionary<int, long> originalData)
-        {
-            var sailToDS = data.totalCellOnLayer + data.totalSailOnSwarm;
-            long sailUsed = data.totalStructureOnLayer * 6 + sailToDS;
-            if (originalData[11901] < sailToDS
-                || originalData[1503] < data.totalStructureOnLayer
-                || originalData[1501] < sailUsed
-                || originalData[1404] < originalData[1501] / 2
-                || originalData[1304] < originalData[6005] + originalData[1503] * 4
-                || originalData[1126] < originalData[1304]
-                || originalData[1125] < originalData[1503] * 6)
-            {
-                return false;
-            }
-
-            for (int i = 6001; i < 6006; i++)
-            {
-                if (originalData[i] < originalData[6006] || originalData[i] < 0x4ffff)
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
+        /**
+         * 上传银河系数据的入口方法
+         */
         public static bool SendUploadLoginRequest()
         {
             if (GameMain.data == null || time - lastUploadTime <= 119.0)
                 return false;
+            lastUploadTime = time;
             if (AccountData.me.userId <= 0UL || AccountData.me.platform <= ESalePlatform.Standalone)
                 return false;
             milkyWayWebClient.loginRequest = HttpManager.GetByUrl(new HttpConnectParam()

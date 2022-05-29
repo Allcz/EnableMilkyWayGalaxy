@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using UnityEngine;
+﻿using System.IO;
 
 namespace EnableMilkyWayGalaxy.patches
 {
@@ -9,13 +7,13 @@ namespace EnableMilkyWayGalaxy.patches
         private const string LogDirectory = "Allz-EnableMilkyWayGalaxy";
         private static string _logPath = "";
 
-        public static void SaveToFile(string content)
+        public static void LOG(string content)
         {
             string path = GetLogPath();
-            SaveToFile(path, content);
+            LOG(path, content);
         }
 
-        public static void SaveToFile(string path, string content)
+        private static void LOG(string path, string content)
         {
             StreamWriter sw = new StreamWriter(path, true);
             content = System.DateTime.Now + ": " + content;
@@ -24,34 +22,13 @@ namespace EnableMilkyWayGalaxy.patches
             sw.Close();
         }
 
-        /*
-         * 获取历史 Log 数据
-         */
-        public static string GetHistoryLogs()
-        {
-            try
-            {
-                var logPath = GetLogPath();
-                var sr = new StreamReader(logPath);
-                var readToEnd = sr.ReadToEnd();
-                sr.Close();
-                return readToEnd;
-            }
-            catch
-            {
-                return "";
-            }
-        }
-        
-        
-        public static string GetLogPath()
+        private static string GetLogPath()
         {
             if (!string.IsNullOrEmpty(_logPath))
                 return _logPath;
             //获取程序的基目录
             string pluginPath = BepInEx.Paths.PluginPath;
             string path =pluginPath  + "\\" + LogDirectory;
-
             if (!Directory.Exists(path))
             {
                 try
@@ -63,8 +40,6 @@ namespace EnableMilkyWayGalaxy.patches
                     path = pluginPath;
                 }
             }
-            
-
             _logPath = Path.GetFullPath(path + "\\Log.log");
             return _logPath;
         }

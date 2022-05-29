@@ -2,17 +2,16 @@
 
 ## Features
 
-- Even if you are using mods or it is not your game save:
-  - You can still upload the data, power generation by Dyson spheres, to milky way galaxy server successfully.
-  - Enables unlocking achievements.
+- 
+- Unlock the milky way and achievements even if you are using mods.
 
-
-- 即使使用mod或者其他人的存档：
-  - 你的戴森球发电数据仍然可以成功地在 银河系 上显示。
-  - 允许解锁成就。
+- 即使使用mod也可以 解锁银河系、解锁成就。
 
 
 ## Changelog
+
+### v1.1.3
+- Bugs fixed.
 
 ### v1.1.2
 - Updated to work with game version 0.9.25.11985 or higher.

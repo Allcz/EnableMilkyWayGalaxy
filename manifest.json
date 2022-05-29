@@ -1,6 +1,6 @@
 {
   "name": "EnableMilkyWayGalaxy",
-  "version_number": "1.1.2",
+  "version_number": "1.1.3",
   "website_url": "https://github.com/Allcz/EnableMilkyWayGalaxy",
   "description": "Even if you are using mods: Enables uploading the power generation by Dyson spheres to milky way galaxy server and unlocking achievements.  即使使用mod, 你的戴森球发电数据仍然可以成功地在 银河系 上显示、并允许解锁成就。",
   "dependencies": [

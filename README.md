@@ -2,13 +2,15 @@
 
 ## Features
 
-- 
 - Unlock the milky way and achievements even if you are using mods.
 
 - 即使使用mod也可以 解锁银河系、解锁成就。
 
 
 ## Changelog
+
+### v1.1.4
+- Bugs fixed.
 
 ### v1.1.3
 - Bugs fixed.

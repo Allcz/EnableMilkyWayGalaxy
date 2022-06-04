@@ -2,7 +2,7 @@
   "name": "EnableMilkyWayGalaxy",
   "version_number": "1.1.4",
   "website_url": "https://github.com/Allcz/EnableMilkyWayGalaxy",
-  "description": "Unlock the milky way and achievements even if you are using mods. 即使使用mod也可以解锁银河系、解锁成就。",
+  "description": "Unlock the milky way and achievements even if cheated. 即使作弊也可以解锁银河系、解锁成就。",
   "dependencies": [
     "xiaoye97-BepInEx-5.4.11"
   ]

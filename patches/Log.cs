@@ -28,7 +28,7 @@ namespace EnableMilkyWayGalaxy.patches
                 return _logPath;
             //获取程序的基目录
             string pluginPath = BepInEx.Paths.PluginPath;
-            string path =pluginPath  + "\\" + LogDirectory;
+            string path = pluginPath + "\\" + LogDirectory;
             if (!Directory.Exists(path))
             {
                 try
@@ -40,6 +40,7 @@ namespace EnableMilkyWayGalaxy.patches
                     path = pluginPath;
                 }
             }
+
             _logPath = Path.GetFullPath(path + "\\Log.log");
             return _logPath;
         }

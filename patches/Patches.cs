@@ -23,6 +23,7 @@ namespace EnableMilkyWayGalaxy.patches
             {
                 Debug.Log(e);
             }
+
             return true;
         }
 
@@ -39,25 +40,37 @@ namespace EnableMilkyWayGalaxy.patches
             return false;
         }
     }
-    
+
     [HarmonyPatch(typeof(MilkyWayWebClient), "SendReportRequest")]
     class MilkyWayWebClientSendReportRequestPatch
     {
         private static Random random = new Random();
-        
+
         /**
          * 方法执行前执行，为了确保gameTick值符合要求
          * 先校验 GameMain.gameTick 的值是否符合最低要求，如果不符合，临时改变其值
          */
         public static bool Prefix(ref long __state)
         {
+            ulong generatingCapacity = 0UL;
+            if (null != GameMain.data && null != GameMain.data.dysonSpheres)
+            {
+                foreach (DysonSphere dysonSphere in GameMain.data.dysonSpheres)
+                {
+                    if (null == dysonSphere) continue;
+                    generatingCapacity += (ulong) dysonSphere.energyGenCurrentTick;
+                }
+            }
+
             __state = GameMain.gameTick;
+            // 根据发电量估算小时数，10-20h/TW
+            var minGameTickByGC = generatingCapacity / (ulong) (random.Next(0xf11) + 0xf11);
             // gameTick 值过小时，上传的戴森球数据不被承认
-            long minGameTicket = (long) ((1 + 5 * random.NextDouble()) * 0x1fffff);
-            GameMain.gameTick = __state > minGameTicket ? __state : minGameTicket;
+            long minGameTick = Math.Max((long) ((1 + 5 * random.NextDouble()) * 0x1fffff), (long) minGameTickByGC);
+            GameMain.gameTick = __state > minGameTick ? __state : minGameTick;
             return true;
         }
-        
+
         /**
          * 将 GameMain.gameTick 值复原
          */

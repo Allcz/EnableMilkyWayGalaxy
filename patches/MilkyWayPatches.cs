@@ -1,8 +1,8 @@
 ﻿using DSPWeb;
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using System;
+using System.Collections.Generic;
 using Random = System.Random;
 
 namespace EnableMilkyWayGalaxy.patches
@@ -10,7 +10,7 @@ namespace EnableMilkyWayGalaxy.patches
     public class MilkyWayPatches : MonoBehaviour
     {
         private static MilkyWayWebClient milkyWayWebClient = DSPGame.milkyWayWebClient;
-        
+
         private static Random random = new Random();
         private static double time => (DateTime.UtcNow.ToOADate() - 44217.0) * 86400.0;
 
@@ -35,21 +35,17 @@ namespace EnableMilkyWayGalaxy.patches
             }
 
             Pre(gameData);
-            DysonSphere[] dysonSpheres = gameData.dysonSpheres;
-            int length = dysonSpheres.Length;
-            for (int index = 0; index < length; ++index)
+            foreach (DysonSphere dysonSphere in gameData.dysonSpheres)
             {
-                if (dysonSpheres[index] != null)
-                {
-                    data.generatingCapacity += (ulong) dysonSpheres[index].energyGenCurrentTick;
-                    data.totalSailOnSwarm += (long) dysonSpheres[index].swarm.sailCount;
-                    data.totalNodeOnLayer += dysonSpheres[index].totalConstructedNodeCount;
-                    data.totalFrameOnLayer += dysonSpheres[index].totalConstructedFrameCount;
-                    data.totalCellOnLayer += dysonSpheres[index].totalConstructedCellPoint;
-                    data.totalStructureOnLayer += dysonSpheres[index].totalConstructedStructurePoint;
-                    if (dysonSpheres[index].energyGenCurrentTick > 0L)
-                        ++data.dysonSphereCount;
-                }
+                if (null == dysonSphere) continue;
+                data.generatingCapacity += (ulong) dysonSphere.energyGenCurrentTick;
+                data.totalSailOnSwarm += (long) dysonSphere.swarm.sailCount;
+                data.totalNodeOnLayer += dysonSphere.totalConstructedNodeCount;
+                data.totalFrameOnLayer += dysonSphere.totalConstructedFrameCount;
+                data.totalCellOnLayer += dysonSphere.totalConstructedCellPoint;
+                data.totalStructureOnLayer += dysonSphere.totalConstructedStructurePoint;
+                if (dysonSphere.energyGenCurrentTick > 0L)
+                    ++data.dysonSphereCount;
             }
 
             if (data.generatingCapacity <= 0UL)

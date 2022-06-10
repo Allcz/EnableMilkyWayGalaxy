@@ -34,8 +34,6 @@ namespace EnableMilkyWayGalaxy.patches
         [HarmonyPatch(typeof(AchievementLogic), "isSelfFormalGame", MethodType.Getter)]
         // 判断是否可以解锁成就，返回true（可以解锁） 原方法：public bool active => this.gameData.gameDesc.achievementEnable & this.gameData.gameAbnormality.IsGameNormal() && this.isSelfFormalGame;
         [HarmonyPatch(typeof(AchievementLogic), "active", MethodType.Getter)]
-        // 任何模式下都可以使用沙盒工具
-        [HarmonyPatch(typeof(GameMain), "sandboxToolsEnabled", MethodType.Getter)]
         public static bool IsGameLegitimate(ref bool __result)
         {
             __result = true;
@@ -43,18 +41,34 @@ namespace EnableMilkyWayGalaxy.patches
         }
 
         /**
-         * 强制改成正常模式，以上传数据到银河系
+         * 获取seedKey
          */
-        [HarmonyPostfix, HarmonyPatch(typeof(GameHistoryData), "AfterTick")]
-        public static void GameHistoryData_AfterTick_Postfix()
+        [HarmonyPrefix, HarmonyPatch(typeof(GameDesc), "seedKey64", MethodType.Getter)]
+        public static bool GameDesc_SeedKey64_Prefix(ref long __result)
         {
             if (null != GameMain.data && null != GameMain.data.gameDesc)
             {
-                // 是否是正常模式
-                GameMain.data.gameDesc.isPeaceMode = true;
-                // 是否是沙盒模式
-                GameMain.data.gameDesc.isSandboxMode = false;
+                var desc = GameMain.data.gameDesc;
+                int galaxySeed = desc.galaxySeed;
+                int num1 = desc.starCount;
+                int num2 = (int) ((double) desc.resourceMultiplier * 10.0 + 0.5);
+                if (num1 > 999)
+                    num1 = 999;
+                else if (num1 < 1)
+                    num1 = 1;
+                if (num2 > 99)
+                    num2 = 99;
+                else if (num2 < 1)
+                    num2 = 1;
+                int num3 = 0;
+                if (desc.isSandboxMode)
+                    num3 = 0;
+                else if (!desc.isPeaceMode)
+                    num3 = 0;
+                __result = (long) galaxySeed * 100000000L + (long) num1 * 100000L + (long) num2 * 1000L + (long) num3;
             }
+
+            return false;
         }
     }
 
@@ -91,6 +105,7 @@ namespace EnableMilkyWayGalaxy.patches
                 {
                     hashCode /= 2;
                 }
+
                 rate = (ulong) (0xf11 + hashCode);
             }
 

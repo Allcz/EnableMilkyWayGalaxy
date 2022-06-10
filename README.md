@@ -8,6 +8,11 @@
 
 ## Changelog
 
+### v1.1.5
+
+- Update: unlock the milky way and achievements in sandbox mode games. Enable sandbox tools in any game modes.
+- 沙盒模式也能解锁银河系、解锁成就。所有模式下都可以使用沙盒工具。
+
 ### v1.1.4
 
 - Bugs fixed.

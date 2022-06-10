@@ -34,10 +34,27 @@ namespace EnableMilkyWayGalaxy.patches
         [HarmonyPatch(typeof(AchievementLogic), "isSelfFormalGame", MethodType.Getter)]
         // 判断是否可以解锁成就，返回true（可以解锁） 原方法：public bool active => this.gameData.gameDesc.achievementEnable & this.gameData.gameAbnormality.IsGameNormal() && this.isSelfFormalGame;
         [HarmonyPatch(typeof(AchievementLogic), "active", MethodType.Getter)]
+        // 任何模式下都可以使用沙盒工具
+        [HarmonyPatch(typeof(GameMain), "sandboxToolsEnabled", MethodType.Getter)]
         public static bool IsGameLegitimate(ref bool __result)
         {
             __result = true;
             return false;
+        }
+
+        /**
+         * 强制改成正常模式，以上传数据到银河系
+         */
+        [HarmonyPostfix, HarmonyPatch(typeof(GameHistoryData), "AfterTick")]
+        public static void GameHistoryData_AfterTick_Postfix()
+        {
+            if (null != GameMain.data && null != GameMain.data.gameDesc)
+            {
+                // 是否是正常模式
+                GameMain.data.gameDesc.isPeaceMode = true;
+                // 是否是沙盒模式
+                GameMain.data.gameDesc.isSandboxMode = false;
+            }
         }
     }
 
@@ -63,8 +80,23 @@ namespace EnableMilkyWayGalaxy.patches
             }
 
             __state = GameMain.gameTick;
+            ulong rate = 0L;
+            // 计算一个相对固定的rate
+            if (null != GameMain.data && null != GameMain.data.account)
+            {
+                String tem = GameMain.data.GetClusterSeedKey() + GameMain.data.account.userName +
+                             GameMain.data.account.userId;
+                var hashCode = Math.Abs(tem.GetHashCode());
+                while (hashCode > 0xf11)
+                {
+                    hashCode /= 2;
+                }
+                rate = (ulong) (0xf11 + hashCode);
+            }
+
+            rate = rate == 0L ? (ulong) (random.Next(0xf11) + 0xf11) : rate;
             // 根据发电量估算小时数，10-20h/TW
-            var minGameTickByGC = generatingCapacity / (ulong) (random.Next(0xf11) + 0xf11);
+            var minGameTickByGC = generatingCapacity / rate;
             // gameTick 值过小时，上传的戴森球数据不被承认
             long minGameTick = Math.Max((long) ((1 + 5 * random.NextDouble()) * 0x1fffff), (long) minGameTickByGC);
             GameMain.gameTick = __state > minGameTick ? __state : minGameTick;

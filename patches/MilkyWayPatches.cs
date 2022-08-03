@@ -9,10 +9,28 @@ namespace EnableMilkyWayGalaxy.patches
 {
     public class MilkyWayPatches : MonoBehaviour
     {
+        /**
+         * 戴森球上传数据日志
+         */
+        private static Log _milkyWayLog = new Log(Log.MILKY_WAY_LOG);
+
+        /**
+         * debug日志
+         */
+        private static Log _debugLog = new Log(Log.DEBUG_LOG);
+
         private static MilkyWayWebClient milkyWayWebClient = DSPGame.milkyWayWebClient;
 
         private static Random random = new Random();
+
+        /**
+         * 记录游戏模式，是否是沙盒模式
+         */
+        private static bool _isSandboxMode = false;
+
         private static double time => (DateTime.UtcNow.ToOADate() - 44217.0) * 86400.0;
+
+        private static double reportInterval => 300.0;
 
         /**
          * 通过反射获取、赋值 MilkyWayWebClient 属性 lastUploadTime
@@ -21,6 +39,18 @@ namespace EnableMilkyWayGalaxy.patches
         {
             get { return ReflectionUtil.GetPrivateField<double>(milkyWayWebClient, "lastUploadTime"); }
             set { ReflectionUtil.SetPrivateField(milkyWayWebClient, "lastUploadTime", value); }
+        }
+
+        private static double lastReportTime
+        {
+            get { return ReflectionUtil.GetPrivateField<double>(milkyWayWebClient, "lastReportTime"); }
+            set { ReflectionUtil.SetPrivateField(milkyWayWebClient, "lastReportTime", value); }
+        }
+
+        private static bool canReportUx
+        {
+            get { return ReflectionUtil.GetPrivateField<bool>(milkyWayWebClient, "canReportUx"); }
+            set { ReflectionUtil.SetPrivateField(milkyWayWebClient, "canReportUx", value); }
         }
 
         /**
@@ -34,7 +64,8 @@ namespace EnableMilkyWayGalaxy.patches
                 return;
             }
 
-            Pre(gameData);
+            SendRequestPrefix();
+            SetGameDataAccountToMe();
             foreach (DysonSphere dysonSphere in gameData.dysonSpheres)
             {
                 if (null == dysonSphere) continue;
@@ -52,8 +83,6 @@ namespace EnableMilkyWayGalaxy.patches
                 return;
             lastUploadTime = time;
             FactoryProductionStat[] factoryStatPool = gameData.statistics.production.factoryStatPool;
-            float miningCostRate = Math.Min(gameData.history.miningCostRate, (float) Math.Pow(0.94, 5));
-
             int[] productItemId =
             {
                 6001, // 蓝           
@@ -68,8 +97,9 @@ namespace EnableMilkyWayGalaxy.patches
                 1126, // 卡西米尔晶体     
                 1501, // 太阳帆         {(1404, 0.5)}  
                 1503, // 小型运载火箭    {(1501, 6), (1304, 4), (1125, 6)}
-                11901 // 
+                11901 // 生产的太阳帆总数
             };
+            // 20001 // 采矿消耗率 x1000000
             var productTotalDict = new Dictionary<int, long>();
             foreach (var id in productItemId)
             {
@@ -91,28 +121,11 @@ namespace EnableMilkyWayGalaxy.patches
             }
 
             Dictionary<int, long> tempProductTotalDict = new Dictionary<int, long>(productTotalDict);
-
             var randomRate = 1.01 + 0.02 * random.NextDouble();
-            if (miningCostRate < Math.Pow(0.94, 5))
-            {
-                long upgradeCost = 0;
-                int level = (int) (Math.Log(0.94, miningCostRate) + 0.5);
-                if (level > 5)
-                {
-                    upgradeCost += 2000 * level * (level - 10) - 2000 * 5 * (5 - 10);
-                    upgradeCost *= 10;
-                    upgradeCost += random.Next(0xfff);
-                }
-
-                upgradeCost = Math.Max(upgradeCost,
-                    (long) (data.generatingCapacity / (500.0d + 500 * random.NextDouble())));
-
-                if (upgradeCost > tempProductTotalDict[6006])
-                {
-                    tempProductTotalDict[6006] = ProductRate(randomRate, upgradeCost);
-                }
-            }
-
+            long level = Math.Min(5 + (int) (data.generatingCapacity / 10000000000), 1000);
+            float miningCostRate = Math.Min(gameData.history.miningCostRate, (float) Math.Pow(0.94, level));
+            long upgradeCost = Math.Abs((2000 * level * (level - 10) + 50000) * 20 + 0xffff + random.Next(0xfff));
+            tempProductTotalDict[6006] = ProductRate(randomRate, upgradeCost + tempProductTotalDict[6006]);
             for (int i = 6001; i < 6006; i++)
             {
                 var randomTotal = (long) ((1 + 0.5d * random.NextDouble()) * 0xfffff) + tempProductTotalDict[6006];
@@ -182,6 +195,7 @@ namespace EnableMilkyWayGalaxy.patches
                 (object) productTotalDict[1126], (object) productTotalDict[1501], (object) productTotalDict[1503],
                 (object) productTotalDict[11901], (object) (float) ((double) miningCostRate * 1000000.0), (object) 0,
                 (object) GameConfig.gameVersion.Build, (object) 0);
+            // _debugLog.LOG(string.Format("evidence={0}", str1));
             byte num29 = DSPGame.globalOption.dataUploadToMilkyWay == EUploadDataToMilkyWay.Anonymous
                 ? (byte) 1
                 : (byte) 0;
@@ -198,6 +212,7 @@ namespace EnableMilkyWayGalaxy.patches
                 (object) data.totalFrameOnLayer, (object) data.totalSailOnSwarm, (object) data.totalStructureOnLayer,
                 (object) data.totalCellOnLayer, (object) str1, (object) num29, (object) milkyWayWebClient.loginKey,
                 (object) str2);
+            SendRequestPostfix();
             milkyWayWebClient.uploadRequest = HttpManager.GetByUrl(new HttpConnectParam()
             {
                 url = url,
@@ -206,18 +221,21 @@ namespace EnableMilkyWayGalaxy.patches
                 errorDelegate = new HttpRequestErrorDelegate(milkyWayWebClient.OnUploadErrored),
                 maxTimeoutTime = 30
             });
-            String content = String.Format("send data to milky way: url={0}", url);
-            Log.LOG(content);
+            String content = String.Format("send data to milky way: Get url={0}", url);
+            _milkyWayLog.LOG(content);
         }
 
         /**
          * 存档账户信息与登录账户信息统一
          */
-        public static void Pre(GameData gameData)
+        public static void SetGameDataAccountToMe()
         {
-            gameData.account.userId = AccountData.me.userId;
-            gameData.account.platform = AccountData.me.platform;
-            gameData.account.detail = AccountData.me.detail;
+            if (null != GameMain.data)
+            {
+                GameMain.data.account.userId = AccountData.me.userId;
+                GameMain.data.account.platform = AccountData.me.platform;
+                GameMain.data.account.detail = AccountData.me.detail;
+            }
         }
 
         public static long ProductRate(double rate, long pro)
@@ -231,9 +249,12 @@ namespace EnableMilkyWayGalaxy.patches
         public static void OnUploadLoginSucceed(DownloadHandler handler)
         {
             if (!((UnityEngine.Object) milkyWayWebClient.loginRequest != (UnityEngine.Object) null))
+            {
+                // _debugLog.LOG("loginRequest failed");
                 return;
-            Debug.Log((object) ("Milky Way login (for upload): " + handler.text + " request time = " +
-                                milkyWayWebClient.loginRequest.reqTime.ToString("0.000")));
+            }
+
+            // _debugLog.LOG( ("Milky Way login (for upload): " + handler.text + " request time = " + milkyWayWebClient.loginRequest.reqTime.ToString("0.000")));
             string[] strArray = handler.text.Split(new string[1] {","}, StringSplitOptions.RemoveEmptyEntries);
             if (strArray.Length >= 2)
             {
@@ -256,10 +277,12 @@ namespace EnableMilkyWayGalaxy.patches
             lastUploadTime = time;
             if (AccountData.me.userId <= 0UL || AccountData.me.platform <= ESalePlatform.Standalone)
                 return false;
+            string url = string.Format("{0}{1}?user_id={2}", (object) MilkyWayWebClient.galaxyServerAddress,
+                (object) MilkyWayWebClient.loginHeaderApi, (object) AccountData.me.userId);
+            // _debugLog.LOG(string.Format("Send Milky Way login: Get {0}", url));
             milkyWayWebClient.loginRequest = HttpManager.GetByUrl(new HttpConnectParam()
             {
-                url = string.Format("{0}{1}?user_id={2}", (object) MilkyWayWebClient.galaxyServerAddress,
-                    (object) MilkyWayWebClient.loginHeaderApi, (object) AccountData.me.userId),
+                url = url,
                 downloadHandler = (DownloadHandler) new DownloadHandlerBuffer(),
                 successDelegate = new HttpRequestSuccessDelegate(OnUploadLoginSucceed),
                 errorDelegate = new HttpRequestErrorDelegate(milkyWayWebClient.OnUploadLoginErrored),
@@ -267,6 +290,126 @@ namespace EnableMilkyWayGalaxy.patches
                 maxTimeoutTime = 120
             });
             return true;
+        }
+
+        public static void SendReportRequest()
+        {
+            lastReportTime = time;
+            SendRequestPrefix();
+            long num1 = (long) AccountData.me.userId;
+            if (num1 == 0L)
+                num1 = (long) GameMain.data.gameDesc.galaxySeed + 10000000000L;
+            if (num1 == 0L)
+                return;
+            long userId = (long) AccountData.me.userId;
+            int build = GameConfig.gameVersion.Build;
+            long gameTick = 100 * 60 * 60 * 60 + GameMain.gameTick;
+            double timeSinceStart = 11 * GlobalObject.timeSinceStart;
+            int opCounter = 11 * GlobalObject.opCounter;
+            double num2 = PerformanceMonitor.timeCostsShowing[1] * 1000.0;
+            string str1 = "";
+            int num3 = Math.Min(GameMain.multithreadSystem.usedThreadCnt, SystemInfo.processorCount);
+            long dataLength1 = 11 * PerformanceMonitor.dataLengths[1];
+            string str2 = "";
+            int num4 = (int) (FPSController.averageFPS + 0.5);
+            int num5 = (int) (FPSController.averageUPS + 0.5);
+            for (int index = 2; index < 35; ++index)
+            {
+                double num6 = PerformanceMonitor.timeCostsShowing[index] * 1000.0;
+                if (num6 > 0.0001)
+                {
+                    string str3 = ((ECpuWorkEntry) index).ToString() + "-" + num6.ToString("0.0000") + "|";
+                    str1 += str3;
+                }
+            }
+
+            long[] dataLengths = new long[32];
+            Array.Copy(PerformanceMonitor.dataLengths, dataLengths, dataLengths.Length);
+
+            for (int index = 2; index < 32; ++index)
+            {
+                long dataLength2 = 11 * dataLengths[index];
+                if (dataLength2 > 0L)
+                {
+                    string str4 = ((ESaveDataEntry) index).ToString() + "-" + dataLength2.ToString("0") + "|";
+                    str2 += str4;
+                }
+            }
+
+            SendRequestPostfix();
+            String url = string.Format(
+                "{0}{1}?user_id={2}&owner_id={3}&version={4}&game_tick={5}&game_time={6:0.00}&game_exp={7}&cpu_time={8:0.0000}&cpu_detail={9}&thread_count={10}&data_len={11}&data_detail={12}&fps={13}&ups={14}&pwd=41917",
+                (object) MilkyWayWebClient.galaxyServerAddress, (object) MilkyWayWebClient.uxReportApi,
+                (object) num1, (object) userId, (object) build, (object) gameTick, (object) timeSinceStart,
+                (object) opCounter, (object) num2, (object) str1, (object) num3, (object) dataLength1,
+                (object) str2, (object) num4, (object) num5);
+            _milkyWayLog.LOG(String.Format("send report to server: url={0}", url));
+            HttpManager.GetByUrl(new HttpConnectParam()
+            {
+                url = url,
+                downloadHandler = (DownloadHandler) new DownloadHandlerBuffer(),
+                responseTimeoutTime = 60,
+                maxTimeoutTime = 120
+            });
+        }
+
+        public static void CheckReportPeriod()
+        {
+            // 暂时不执行上传游戏数据详情
+            lastReportTime = time;
+            if (time - lastReportTime <= reportInterval)
+            {
+                return;
+            }
+
+            try
+            {
+                if ((double) UIAutoSave.autoSaveTime < 110.0)
+                {
+                    SendReportRequest();
+                }
+                else
+                {
+                    float num1 = (float) (GameMain.gameTick - UIAutoSave.lastSaveTick) * 0.01666667f;
+                    float num2 = UIAutoSave.autoSaveTime - num1;
+                    if ((double) num1 <= 80.0 || (double) num2 <= 20.0)
+                        return;
+                    SendReportRequest();
+                }
+            }
+            catch
+            {
+            }
+        }
+
+
+        /**
+         * 拼接上传数据前，将游戏模式调整维正常模式,
+         */
+        public static void SendRequestPrefix()
+        {
+            if (null != GameMain.data && null != GameMain.data.gameDesc)
+            {
+                _isSandboxMode = GameMain.data.gameDesc.isSandboxMode;
+                // 是否是正常模式
+                GameMain.data.gameDesc.isPeaceMode = true;
+                // 是否是沙盒模式
+                GameMain.data.gameDesc.isSandboxMode = false;
+                GameMain.sandboxToolsEnabled = false;
+            }
+        }
+
+        /**
+         * 拼接完上传的数据后，将游戏模式还原
+         */
+        public static void SendRequestPostfix()
+        {
+            if (null != GameMain.data && null != GameMain.data.gameDesc)
+            {
+                GameMain.data.gameDesc.isPeaceMode = !_isSandboxMode;
+                GameMain.data.gameDesc.isSandboxMode = _isSandboxMode;
+                GameMain.sandboxToolsEnabled = _isSandboxMode;
+            }
         }
     }
 }

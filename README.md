@@ -8,6 +8,9 @@
 
 ## Changelog
 
+### v1.1.7
+- Bugs fixed.
+
 ### v1.1.6
 
 - Unlock the milky way and achievements in sandbox mode games.
